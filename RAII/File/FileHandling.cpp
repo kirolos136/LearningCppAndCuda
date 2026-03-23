@@ -2,7 +2,7 @@
 
 File::File(const char* fileName)
 {   
-    fp = fopen(fileName, "w+");
+    fp = fopen(fileName, "a+");
     if (fp == nullptr) {
         throw std::runtime_error(std::string("Could not open file: ") + fileName);
     }
@@ -10,11 +10,28 @@ File::File(const char* fileName)
 
 File::~File()
 {
-    fclose(fp);
+    if (fp) {
+        fclose(fp);
+    }
+}
+
+File& File::operator=(File&& other) noexcept
+{
+    if (this != &other) {
+        if (fp) {
+            fclose(fp);
+        }
+        fp = other.fp;
+        other.fp = nullptr;
+    }
+    return *this;
 }
 
 void File::write(const char *text)
 {
+    if (!fp) {
+        throw std::runtime_error("Write on invalid file handle");
+    }
     if (fputs(text, fp) == EOF) {
         throw std::runtime_error("Write failed");
     }
@@ -22,6 +39,9 @@ void File::write(const char *text)
 
 std::string File::read()
 {
+    if (!fp) {
+        throw std::runtime_error("Read on invalid file handle");
+    }
     rewind(fp);  // go back to start before reading
     std::string result;
     char buf[256];
@@ -40,7 +60,7 @@ void writeHelloWorld(){
     File file("file.txt");
     file.write("hello world");
     std::cout << file.read() << std::endl;
-    fclose(file.fp);
+    fclose(file.get());
 }
 
 //second copying(shallow copy) point to  same file object (FILE struct) in memory

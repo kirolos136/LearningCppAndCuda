@@ -3,8 +3,22 @@
 MutexLock::MutexLock(std::mutex& m): mtx(m)
 {
     mtx.lock();
+    // mtx.lock();
     locked = true;
 }
+
+//QUESTION : What does MutexLock do if the same thread locks twice? 
+//SOLUTION:
+// Think of a mutex like a **bathroom with one key**:
+// Thread wants the key → takes it 
+// Thread wants the key AGAIN → 
+//     looks for the key →
+//     key is in its own pocket →
+//     waits for someone to return the key →
+//     but IT is the one holding it →
+//     waits forever => DEADLOCK
+
+//FIX: Counting AND Recursive mutex
 
 MutexLock::~MutexLock()
 {
@@ -83,11 +97,11 @@ void moveProblem(std::mutex& m){
 }
 
 
-int main(){
-    std::mutex m;
-    unlockingSolved(m);
-    // noUnlocking(m);
+// int main(){
+//     std::mutex m;
+//     unlockingSolved(m);
+//     // noUnlocking(m);
 
-    //move Problem
-    moveProblem(m);
-}
+//     //move Problem
+//     moveProblem(m);
+// }

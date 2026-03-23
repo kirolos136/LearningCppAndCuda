@@ -59,10 +59,10 @@ void seeTimeStackCancelled(){
     time.cancel();
 }
 
-int main(){
-    std::cout << "=== Normal Timer ===\n";
-    seeTimeStack();
+// int main(){
+//     std::cout << "=== Normal Timer ===\n";
+//     seeTimeStack();
 
-    std::cout << "\n=== Cancelled Timer ===\n";
-    seeTimeStackCancelled();
-}
+//     std::cout << "\n=== Cancelled Timer ===\n";
+//     seeTimeStackCancelled();
+// }
